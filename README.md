@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 **Assessment 1.2 (Total Marks **20**)**
 
@@ -22,3 +23,6 @@ In this assignment you will complete the following tasks:
 
 ---
 
+=======
+# N12398063_IFN636_1.2
+>>>>>>> c45a5147d37b5d691c618936cbe70250efa300d2
