@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-ro
 import Dashboard from './pages/Dashboard';
 import Plots from './pages/Plots';
 import Login from './pages/Login';
+import Register from './pages/Register';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <div style={{ flex: 1, padding: "20px" }}>
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             <Route path="/" element={<Navigate to="/login" />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/plots" element={<Plots />} />

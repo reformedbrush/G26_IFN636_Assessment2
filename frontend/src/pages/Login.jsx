@@ -13,7 +13,7 @@ const Login = () => {
     try {
       const response = await axiosInstance.post('/api/auth/login', formData);
       login(response.data);
-      navigate('/tasks');
+      navigate('/dashboard');
     } catch (error) {
       alert('Login failed. Please try again.');
     }
@@ -40,6 +40,15 @@ const Login = () => {
         <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded">
           Login
         </button>
+        <p className="text-center mt-4 text-sm">
+          Don't have an account?{" "}
+          <span
+            onClick={() => navigate('/register')}
+            className="text-blue-600 cursor-pointer hover:underline"
+          >
+            Register
+          </span>
+        </p>
       </form>
     </div>
   );
