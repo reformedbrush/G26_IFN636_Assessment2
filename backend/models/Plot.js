@@ -16,7 +16,7 @@ const plotSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ["Available", "Reserved", "Full"],
+    enum: ["Available", "Reserved", "Full", "Occupied"],
     default: "Available",
   },
   location: {
