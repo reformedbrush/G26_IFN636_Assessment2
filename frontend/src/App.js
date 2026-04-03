@@ -1,20 +1,35 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
+import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
+import Dashboard from './pages/Dashboard';
+import Plots from './pages/Plots';
 import Login from './pages/Login';
-import Register from './pages/Register';
-import Profile from './pages/Profile';
-import Tasks from './pages/Tasks';
 
 function App() {
   return (
     <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/tasks" element={<Tasks />} />
-      </Routes>
+      <div style={{ display: "flex", height: "100vh" }}>
+
+        {/* Sidebar */}
+        <div style={{ width: "220px", background: "#1f2937", color: "white", padding: "20px" }}>
+          <h2><b>Garden Manager</b> </h2>
+          <Link to="/dashboard" style={{ color: "white", textDecoration: "none" }}>
+  <p style={{ marginTop: "10px" }}>Dashboard</p>
+</Link>
+
+<Link to="/plots" style={{ color: "white", textDecoration: "none" }}>
+  <p>Manage Plot</p>
+</Link>
+        </div>
+
+        <div style={{ flex: 1, padding: "20px" }}>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/" element={<Navigate to="/login" />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/plots" element={<Plots />} />
+          </Routes>
+        </div>
+
+      </div>
     </Router>
   );
 }
