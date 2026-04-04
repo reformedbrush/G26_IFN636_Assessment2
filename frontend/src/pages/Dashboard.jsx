@@ -21,6 +21,18 @@ function Dashboard() {
     }
   };
 
+  const deleteUser = async (userId) => {
+    if (window.confirm("Are you sure you want to delete this user?")) {
+      try {
+        await axiosInstance.delete(`/api/auth/users/${userId}`);
+        setUsers(users.filter((u) => u._id !== userId));
+      } catch (error) {
+        console.error("Error deleting user:", error);
+        alert("Failed to delete user");
+      }
+    }
+  };
+
   return (
     <div>
       <h1 style={{ fontSize: "28px", marginBottom: "20px" }}>Dashboard</h1>
@@ -70,6 +82,7 @@ function Dashboard() {
           <tr>
             <th style={thStyle}>Name</th>
             <th style={thStyle}>Email</th>
+            <th style={thStyle}>Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -77,6 +90,21 @@ function Dashboard() {
             <tr key={user._id}>
               <td style={tdStyle}>{user.name}</td>
               <td style={tdStyle}>{user.email}</td>
+              <td style={tdStyle}>
+                <button
+                  onClick={() => deleteUser(user._id)}
+                  style={{
+                    backgroundColor: "#FF0000",
+                    color: "white",
+                    border: "none",
+                    padding: "8px 14px",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                  }}
+                >
+                  Delete
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>

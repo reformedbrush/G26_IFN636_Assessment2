@@ -1,20 +1,22 @@
-import axiosInstance from '../axiosConfig';
-import { useEffect, useState } from 'react';
+import axiosInstance from "../axiosConfig";
+import { useEffect, useState } from "react";
 
 function Plots() {
   const [plots, setPlots] = useState([]);
-  const [name, setName] = useState('');
-  const [size, setSize] = useState('');
-  const [plants, setPlants] = useState('');
+  const [name, setName] = useState("");
+  const [size, setSize] = useState("");
+  const [plants, setPlants] = useState("");
   const [users, setUsers] = useState([]);
+  const [editingId, setEditingId] = useState(null);
+  const [editData, setEditData] = useState({ name: "", size: "", plants: "" });
 
   useEffect(() => {
     fetchData();
   }, []);
 
   const fetchData = async () => {
-    const plotsRes = await axiosInstance.get('/api/plots');
-    const usersRes = await axiosInstance.get('/api/auth/users');
+    const plotsRes = await axiosInstance.get("/api/plots");
+    const usersRes = await axiosInstance.get("/api/auth/users");
 
     setPlots(plotsRes.data);
     setUsers(usersRes.data);
@@ -26,42 +28,63 @@ function Plots() {
       return;
     }
 
-    const res = await axiosInstance.post('/api/plots', {
-      name, size, plants
+    const res = await axiosInstance.post("/api/plots", {
+      name,
+      size,
+      plants,
     });
 
     setPlots([...plots, res.data]);
 
-    setName('');
-    setSize('');
-    setPlants('');
+    setName("");
+    setSize("");
+    setPlants("");
   };
 
   const deletePlot = async (id) => {
     await axiosInstance.delete(`/api/plots/${id}`);
-    setPlots(plots.filter(p => p._id !== id));
+    setPlots(plots.filter((p) => p._id !== id));
   };
 
   const updatePlot = async (id, data) => {
     const res = await axiosInstance.put(`/api/plots/${id}`, data);
-    setPlots(plots.map(p => p._id === id ? res.data : p));
+    setPlots(plots.map((p) => (p._id === id ? res.data : p)));
+  };
+
+  const startEdit = (plot) => {
+    setEditingId(plot._id);
+    setEditData({ name: plot.name, size: plot.size, plants: plot.plants });
+  };
+
+  const saveEdit = async () => {
+    await updatePlot(editingId, editData);
+    setEditingId(null);
+    setEditData({ name: "", size: "", plants: "" });
+  };
+
+  const cancelEdit = () => {
+    setEditingId(null);
+    setEditData({ name: "", size: "", plants: "" });
   };
 
   return (
     <div style={{ padding: "20px" }}>
-      <h1 style={{paddingBottom: "30px"}}><b>Plot Management</b></h1>
+      <h1 style={{ paddingBottom: "30px" }}>
+        <b>Plot Management</b>
+      </h1>
 
-   
-      <div style={{
-        marginBottom: "20px",
-        padding: "15px",
-        border: "1px solid #ddd",
-        borderRadius: "8px",
-        backgroundColor: "#f9fafb",
-        display: "flex",
-        alignItems: "center",
-        gap: "10px"
-      }}>
+      <div
+        style={{
+          marginBottom: "20px",
+          padding: "15px",
+          border: "1px solid #ddd",
+          borderRadius: "8px",
+          backgroundColor: "#f9fafb",
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+        }}
+      >
         <input
           value={name}
           placeholder="Plot name"
@@ -70,7 +93,7 @@ function Plots() {
             padding: "8px",
             border: "1px solid #ccc",
             borderRadius: "5px",
-            outline: "none"
+            outline: "none",
           }}
         />
 
@@ -82,7 +105,7 @@ function Plots() {
             padding: "8px",
             border: "1px solid #ccc",
             borderRadius: "5px",
-            outline: "none"
+            outline: "none",
           }}
         />
 
@@ -94,7 +117,7 @@ function Plots() {
             padding: "8px",
             border: "1px solid #ccc",
             borderRadius: "5px",
-            outline: "none"
+            outline: "none",
           }}
         />
 
@@ -106,75 +129,280 @@ function Plots() {
             color: "white",
             border: "none",
             borderRadius: "5px",
-            cursor: "pointer"
+            cursor: "pointer",
           }}
         >
           + Add Plot
         </button>
       </div>
-<div style={{textAlign: "left"}}>
-   
-      <table
-        style={{
-          width: "100%",
-          borderCollapse: "collapse",
-          backgroundColor: "white",
-          borderRadius: "8px",
-          overflow: "hidden",
-          boxShadow: "0 2px 8px rgba(0,0,0,0.05)"
-        }}
-      >
-        <thead>
-          <tr>
-            <th style={{ backgroundColor: "#f3f4f6", padding: "12px", textAlign: "left", borderBottom: "1px solid #ddd" }}>Name</th>
-            <th style={{ backgroundColor: "#f3f4f6", padding: "12px", textAlign: "left", borderBottom: "1px solid #ddd" }}>Size</th>
-            <th style={{ backgroundColor: "#f3f4f6", padding: "12px", textAlign: "left", borderBottom: "1px solid #ddd" }}>Plants</th>
-            <th style={{ backgroundColor: "#f3f4f6", padding: "12px", textAlign: "left", borderBottom: "1px solid #ddd" }}>Status</th>
-            <th style={{ backgroundColor: "#f3f4f6", padding: "12px", textAlign: "left", borderBottom: "1px solid #ddd" }}>Assign User</th>
-            <th style={{ backgroundColor: "#f3f4f6", padding: "12px", textAlign: "left", borderBottom: "1px solid #ddd" }}>Actions</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {plots.map(plot => (
-            <tr key={plot._id}>
-              <td style={{ padding: "10px", borderBottom: "1px solid #eee" }}>{plot.name}</td>
-              <td style={{ padding: "10px", borderBottom: "1px solid #eee" }}>{plot.size}</td>
-              <td style={{ padding: "10px", borderBottom: "1px solid #eee" }}>{plot.plants}</td>
-
-              <td style={{ padding: "10px", borderBottom: "1px solid #eee" }}>
-                <select
-                  value={plot.status}
-                  onChange={(e) => updatePlot(plot._id, { status: e.target.value })}
-                >
-                  <option value="Available">Available</option>
-                  <option value="Occupied">Occupied</option>
-                </select>
-              </td>
-
-              <td style={{ padding: "10px", borderBottom: "1px solid #eee" }}>
-                <select
-                  value={plot.bookedBy?._id || ""}
-                  onChange={(e) => updatePlot(plot._id, { bookedBy: e.target.value })}
-                >
-                  <option value="">Select User</option>
-                  {users.map(user => (
-                    <option key={user._id} value={user._id}>
-                      {user.name}
-                    </option>
-                  ))}
-                </select>
-              </td>
-
-              <td style={{ padding: "10px", borderBottom: "1px solid #eee" }}>
-                <button style={{backgroundColor: "#FF0000", color: "white", border: "none", padding: "8px 14px", borderRadius: "5px", cursor: "pointer"}} onClick={() => deletePlot(plot._id)}>
-                  Delete
-                </button>
-              </td>
+      <div style={{ textAlign: "left" }}>
+        <table
+          style={{
+            width: "100%",
+            borderCollapse: "collapse",
+            backgroundColor: "white",
+            borderRadius: "8px",
+            overflow: "hidden",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
+          }}
+        >
+          <thead>
+            <tr>
+              <th
+                style={{
+                  backgroundColor: "#f3f4f6",
+                  padding: "12px",
+                  textAlign: "left",
+                  borderBottom: "1px solid #ddd",
+                }}
+              >
+                Name
+              </th>
+              <th
+                style={{
+                  backgroundColor: "#f3f4f6",
+                  padding: "12px",
+                  textAlign: "left",
+                  borderBottom: "1px solid #ddd",
+                }}
+              >
+                Size
+              </th>
+              <th
+                style={{
+                  backgroundColor: "#f3f4f6",
+                  padding: "12px",
+                  textAlign: "left",
+                  borderBottom: "1px solid #ddd",
+                }}
+              >
+                Plants
+              </th>
+              <th
+                style={{
+                  backgroundColor: "#f3f4f6",
+                  padding: "12px",
+                  textAlign: "left",
+                  borderBottom: "1px solid #ddd",
+                }}
+              >
+                Status
+              </th>
+              <th
+                style={{
+                  backgroundColor: "#f3f4f6",
+                  padding: "12px",
+                  textAlign: "left",
+                  borderBottom: "1px solid #ddd",
+                }}
+              >
+                Assign User
+              </th>
+              <th
+                style={{
+                  backgroundColor: "#f3f4f6",
+                  padding: "12px",
+                  textAlign: "left",
+                  borderBottom: "1px solid #ddd",
+                }}
+              >
+                Actions
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table></div>
+          </thead>
+
+          <tbody>
+            {plots.map((plot) => (
+              <tr key={plot._id}>
+                <td style={{ padding: "10px", borderBottom: "1px solid #eee" }}>
+                  {plot.name}
+                </td>
+                <td style={{ padding: "10px", borderBottom: "1px solid #eee" }}>
+                  {plot.size}
+                </td>
+                <td style={{ padding: "10px", borderBottom: "1px solid #eee" }}>
+                  {plot.plants}
+                </td>
+
+                <td style={{ padding: "10px", borderBottom: "1px solid #eee" }}>
+                  <select
+                    value={plot.status}
+                    onChange={(e) =>
+                      updatePlot(plot._id, { status: e.target.value })
+                    }
+                  >
+                    <option value="Available">Available</option>
+                    <option value="Occupied">Occupied</option>
+                  </select>
+                </td>
+
+                <td style={{ padding: "10px", borderBottom: "1px solid #eee" }}>
+                  <select
+                    value={plot.bookedBy?._id || ""}
+                    onChange={(e) =>
+                      updatePlot(plot._id, { bookedBy: e.target.value })
+                    }
+                  >
+                    <option value="">Select User</option>
+                    {users.map((user) => (
+                      <option key={user._id} value={user._id}>
+                        {user.name}
+                      </option>
+                    ))}
+                  </select>
+                </td>
+
+                <td style={{ padding: "10px", borderBottom: "1px solid #eee" }}>
+                  <button
+                    style={{
+                      backgroundColor: "#3b82f6",
+                      color: "white",
+                      border: "none",
+                      padding: "8px 14px",
+                      borderRadius: "5px",
+                      cursor: "pointer",
+                      marginRight: "5px",
+                    }}
+                    onClick={() => startEdit(plot)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    style={{
+                      backgroundColor: "#FF0000",
+                      color: "white",
+                      border: "none",
+                      padding: "8px 14px",
+                      borderRadius: "5px",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => deletePlot(plot._id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Edit Modal */}
+      {editingId && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0,0,0,0.5)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: "white",
+              padding: "30px",
+              borderRadius: "8px",
+              boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+              width: "100%",
+              maxWidth: "400px",
+            }}
+          >
+            <h2 style={{ marginBottom: "20px" }}>Edit Plot</h2>
+
+            <input
+              value={editData.name}
+              placeholder="Plot name"
+              onChange={(e) =>
+                setEditData({ ...editData, name: e.target.value })
+              }
+              style={{
+                width: "100%",
+                padding: "8px",
+                marginBottom: "15px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                outline: "none",
+                boxSizing: "border-box",
+              }}
+            />
+
+            <input
+              value={editData.size}
+              placeholder="Size"
+              onChange={(e) =>
+                setEditData({ ...editData, size: e.target.value })
+              }
+              style={{
+                width: "100%",
+                padding: "8px",
+                marginBottom: "15px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                outline: "none",
+                boxSizing: "border-box",
+              }}
+            />
+
+            <input
+              value={editData.plants}
+              placeholder="Plants"
+              onChange={(e) =>
+                setEditData({ ...editData, plants: e.target.value })
+              }
+              style={{
+                width: "100%",
+                padding: "8px",
+                marginBottom: "20px",
+                border: "1px solid #ccc",
+                borderRadius: "5px",
+                outline: "none",
+                boxSizing: "border-box",
+              }}
+            />
+
+            <div
+              style={{
+                display: "flex",
+                gap: "10px",
+                justifyContent: "flex-end",
+              }}
+            >
+              <button
+                onClick={cancelEdit}
+                style={{
+                  padding: "8px 14px",
+                  backgroundColor: "#6b7280",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={saveEdit}
+                style={{
+                  padding: "8px 14px",
+                  backgroundColor: "#16a34a",
+                  color: "white",
+                  border: "none",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                }}
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
