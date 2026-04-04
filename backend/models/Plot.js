@@ -23,10 +23,15 @@ const plotSchema = new mongoose.Schema({
     type: String,
     default: "",
   },
+  bookedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    default: null,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
 
-module.exports = mongoose.model("plot", plotSchema);
+module.exports = mongoose.model("Plot", plotSchema);

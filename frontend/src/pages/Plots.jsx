@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axiosInstance from '../axiosConfig';
 import { useEffect, useState } from 'react';
 
 function Plots() {
@@ -6,11 +6,19 @@ function Plots() {
   const [name, setName] = useState('');
   const [size, setSize] = useState('');
   const [plants, setPlants] = useState('');
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5001/api/plots')
-      .then(res => setPlots(res.data));
+    fetchData();
   }, []);
+
+  const fetchData = async () => {
+    const plotsRes = await axiosInstance.get('/api/plots');
+    const usersRes = await axiosInstance.get('/api/auth/users');
+
+    setPlots(plotsRes.data);
+    setUsers(usersRes.data);
+  };
 
   const addPlot = async () => {
     if (!name || !size) {
@@ -18,7 +26,7 @@ function Plots() {
       return;
     }
 
-    const res = await axios.post('http://localhost:5001/api/plots', {
+    const res = await axiosInstance.post('/api/plots', {
       name, size, plants
     });
 
@@ -30,12 +38,12 @@ function Plots() {
   };
 
   const deletePlot = async (id) => {
-    await axios.delete(`http://localhost:5001/api/plots/${id}`);
+    await axiosInstance.delete(`/api/plots/${id}`);
     setPlots(plots.filter(p => p._id !== id));
   };
 
-  const updatePlot = async (id, status) => {
-    const res = await axios.put(`http://localhost:5001/api/plots/${id}`, { status });
+  const updatePlot = async (id, data) => {
+    const res = await axiosInstance.put(`/api/plots/${id}`, data);
     setPlots(plots.map(p => p._id === id ? res.data : p));
   };
 
@@ -122,6 +130,7 @@ function Plots() {
             <th style={{ backgroundColor: "#f3f4f6", padding: "12px", textAlign: "left", borderBottom: "1px solid #ddd" }}>Size</th>
             <th style={{ backgroundColor: "#f3f4f6", padding: "12px", textAlign: "left", borderBottom: "1px solid #ddd" }}>Plants</th>
             <th style={{ backgroundColor: "#f3f4f6", padding: "12px", textAlign: "left", borderBottom: "1px solid #ddd" }}>Status</th>
+            <th style={{ backgroundColor: "#f3f4f6", padding: "12px", textAlign: "left", borderBottom: "1px solid #ddd" }}>Assign User</th>
             <th style={{ backgroundColor: "#f3f4f6", padding: "12px", textAlign: "left", borderBottom: "1px solid #ddd" }}>Actions</th>
           </tr>
         </thead>
@@ -136,10 +145,24 @@ function Plots() {
               <td style={{ padding: "10px", borderBottom: "1px solid #eee" }}>
                 <select
                   value={plot.status}
-                  onChange={(e) => updatePlot(plot._id, e.target.value)}
+                  onChange={(e) => updatePlot(plot._id, { status: e.target.value })}
                 >
                   <option value="Available">Available</option>
                   <option value="Occupied">Occupied</option>
+                </select>
+              </td>
+
+              <td style={{ padding: "10px", borderBottom: "1px solid #eee" }}>
+                <select
+                  value={plot.bookedBy?._id || ""}
+                  onChange={(e) => updatePlot(plot._id, { bookedBy: e.target.value })}
+                >
+                  <option value="">Select User</option>
+                  {users.map(user => (
+                    <option key={user._id} value={user._id}>
+                      {user.name}
+                    </option>
+                  ))}
                 </select>
               </td>
 
