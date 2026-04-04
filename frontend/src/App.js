@@ -6,6 +6,7 @@ import Register from './pages/Register';
 import UserDashboard from './pages/UserDashboard';
 import PlotBooking from './pages/PlotBooking';
 import { useAuth } from './context/AuthContext';
+import Profile from './pages/Profile';
 
 function Layout() {
   const location = useLocation();
@@ -16,7 +17,7 @@ function Layout() {
   return (
     <div style={{ display: "flex", height: "100vh" }}>
       
-      {/* Sidebar */}
+      
       {!hideSidebar && (
         <div style={{ width: "220px", background: "#1f2937", color: "white", padding: "20px", display: "flex", flexDirection: "column" }}>
           <h2><b>Garden Manager</b> </h2>
@@ -24,6 +25,11 @@ function Layout() {
           <Link to="/dashboard" style={{ color: "white", textDecoration: "none" }}>
             <p style={{ marginTop: "10px" }}>Dashboard</p>
           </Link>
+          {user && (
+  <Link to="/profile" style={{ color: "white", textDecoration: "none" }}>
+    <p>Profile</p>
+  </Link>
+)}
 
           {user?.role === "user" && (
             <Link to="/user-plots" style={{ color: "white", textDecoration: "none" }}>
@@ -71,7 +77,15 @@ function Layout() {
       ? <Dashboard />
       : <UserDashboard />
   } 
-/>       
+/>    
+<Route 
+  path="/profile" 
+  element={
+    user 
+      ? <Profile /> 
+      : <Navigate to="/login" />
+  } 
+/>   
 <Route path="/plots" 
   element={
     user?.role === "admin"

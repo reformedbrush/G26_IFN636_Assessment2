@@ -10,8 +10,10 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Sending login data:", formData);
     try {
       const response = await axiosInstance.post("/api/auth/login", formData);
+      console.log("Login response:", response.data);
       login(response.data);
       if (response.data.role === "admin") {
         navigate("/dashboard");
@@ -19,9 +21,8 @@ const Login = () => {
         navigate("/user-plots");
       }
     } catch (error) {
-      alert(error.response?.data?.message || error.message);
-      //console.log(error.response);
-      alert('Login failed. Please try again.');
+      console.log("Login error:", error.response || error);
+      alert(error.response?.data?.message || "Login failed");
     }
   };
 

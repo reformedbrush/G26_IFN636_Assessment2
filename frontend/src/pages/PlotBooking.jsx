@@ -159,8 +159,7 @@ function PlotBooking() {
         Your bookings
       </h2>
       <p style={{ marginBottom: "12px", color: "#4b5563", fontSize: "14px" }}>
-        Release a plot here if you no longer need it. All plots are listed on
-        your Dashboard.
+        Release a plot here if you no longer need it. 
       </p>
       {myPlots.length === 0 ? (
         <p style={{ marginBottom: "16px" }}>You have no bookings yet.</p>
@@ -203,7 +202,7 @@ function PlotBooking() {
                       opacity: busyId === plot._id ? 0.7 : 1,
                     }}
                   >
-                    {busyId === plot._id ? "…" : "Release"}
+                    {busyId === plot._id ? "…" : "Cancel"}
                   </button>
                 </td>
               </tr>
