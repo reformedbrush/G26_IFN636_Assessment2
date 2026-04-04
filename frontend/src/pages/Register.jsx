@@ -46,6 +46,15 @@ console.log(error.response);
         <button type="submit" className="w-full bg-green-600 text-white p-2 rounded">
           Register
         </button>
+        <p className="text-center mt-4 text-sm">
+          Already have an account?{" "}
+          <span
+            onClick={() => navigate('/login')}
+            className="text-blue-600 cursor-pointer hover:underline"
+          >
+            Back to Login
+          </span>
+        </p>
       </form>
     </div>
   );
