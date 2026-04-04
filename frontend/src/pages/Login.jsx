@@ -18,7 +18,7 @@ const Login = () => {
       if (response.data.role === "admin") {
         navigate("/dashboard");
       } else {
-        navigate("/user-plots");
+        navigate("/dashboard");
       }
     } catch (error) {
       console.log("Login error:", error.response || error);
@@ -27,29 +27,40 @@ const Login = () => {
   };
 
   return (
-  
     <div
       style={{
         minHeight: "100vh",
-        backgroundImage: "url('https://images.unsplash.com/photo-1501004318641-b39e6451bec6')",
+        backgroundImage:
+          "url('https://images.unsplash.com/photo-1501004318641-b39e6451bec6')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         display: "flex",
         justifyContent: "center",
-        alignItems: "center"
+        alignItems: "center",
       }}
     >
       <div style={{ width: "100%", maxWidth: "400px" }}>
-        <h1 style={{ textAlign: "center", paddingBottom: "200px", fontSize: "36px" }}>
+        <h1
+          style={{
+            textAlign: "center",
+            paddingBottom: "200px",
+            fontSize: "36px",
+          }}
+        >
           <b>PlotSphere</b>
         </h1>
-        <form onSubmit={handleSubmit} className="bg-white p-6 shadow-md rounded">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white p-6 shadow-md rounded"
+        >
           <h1 className="text-2xl font-bold mb-4 text-center">Login</h1>
           <input
             type="email"
             placeholder="Email"
             value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
             className="w-full mb-4 p-2 border rounded"
           />
           <input
