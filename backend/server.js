@@ -9,6 +9,9 @@ dotenv.config();
 
 
 const app = express();
+const mongoose = require("mongoose");
+
+mongoose.set('strictQuery', true); 
 
 app.use(cors());
 app.use(express.json());
