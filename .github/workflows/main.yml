@@ -2,7 +2,7 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, recovery-final ]
 
 jobs:
   build:
@@ -12,21 +12,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-
+      # Backend
       - name: Install backend dependencies
         run: |
           cd backend
           npm install
 
-      - name: Run backend tests (basic check)
+      - name: Run backend
         run: |
           cd backend
-          echo "Backend setup successful"
+          echo "Backend OK"
 
+      # Frontend
       - name: Install frontend dependencies
         run: |
           cd frontend
