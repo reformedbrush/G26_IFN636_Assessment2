@@ -7,6 +7,9 @@ import UserDashboard from './pages/UserDashboard';
 import PlotBooking from './pages/PlotBooking';
 import { useAuth } from './context/AuthContext';
 import Profile from './pages/Profile';
+import Events from './pages/Events';
+import EventDetails from './pages/EventDetails';
+import AdminEvents from './pages/AdminEvents';
 
 function Layout() {
   const location = useLocation();
@@ -31,6 +34,12 @@ function Layout() {
   </Link>
 )}
 
+          {user && (
+            <Link to="/events" style={{ color: "white", textDecoration: "none" }}>
+              <p>Events</p>
+            </Link>
+          )}
+
           {user?.role === "user" && (
             <Link to="/user-plots" style={{ color: "white", textDecoration: "none" }}>
               <p>Book Plot</p>
@@ -38,9 +47,14 @@ function Layout() {
           )}
 
           {user?.role === "admin" && (
-            <Link to="/plots" style={{ color: "white", textDecoration: "none" }}>
-              <p>Manage Plot</p>
-            </Link>
+            <>
+              <Link to="/plots" style={{ color: "white", textDecoration: "none" }}>
+                <p>Manage Plot</p>
+              </Link>
+              <Link to="/admin/events" style={{ color: "white", textDecoration: "none" }}>
+                <p>Manage Events</p>
+              </Link>
+            </>
           )}
 
           <button
@@ -100,6 +114,24 @@ function Layout() {
                 <PlotBooking />
               ) : user?.role === "admin" ? (
                 <Navigate to="/dashboard" replace />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
+          <Route
+            path="/events"
+            element={user ? <Events /> : <Navigate to="/login" replace />}
+          />
+          <Route
+            path="/events/:id"
+            element={user ? <EventDetails /> : <Navigate to="/login" replace />}
+          />
+          <Route
+            path="/admin/events"
+            element={
+              user?.role === "admin" ? (
+                <AdminEvents />
               ) : (
                 <Navigate to="/login" replace />
               )
