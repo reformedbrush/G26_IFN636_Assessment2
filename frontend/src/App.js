@@ -7,6 +7,9 @@ import UserDashboard from './pages/UserDashboard';
 import PlotBooking from './pages/PlotBooking';
 import { useAuth } from './context/AuthContext';
 import Profile from './pages/Profile';
+import CreateRequest from './pages/CreateRequest';
+import MyRequests from './pages/MyRequests';
+import AdminRequests from './pages/AdminRequests';
 
 function Layout() {
   const location = useLocation();
@@ -32,15 +35,25 @@ function Layout() {
 )}
 
           {user?.role === "user" && (
-            <Link to="/user-plots" style={{ color: "white", textDecoration: "none" }}>
-              <p>Book Plot</p>
-            </Link>
+            <>
+              <Link to="/user-plots" style={{ color: "white", textDecoration: "none" }}>
+                <p>Book Plot</p>
+              </Link>
+              <Link to="/my-requests" style={{ color: "white", textDecoration: "none" }}>
+                <p>My Requests</p>
+              </Link>
+            </>
           )}
 
           {user?.role === "admin" && (
-            <Link to="/plots" style={{ color: "white", textDecoration: "none" }}>
-              <p>Manage Plot</p>
-            </Link>
+            <>
+              <Link to="/plots" style={{ color: "white", textDecoration: "none" }}>
+                <p>Manage Plot</p>
+              </Link>
+              <Link to="/admin/requests" style={{ color: "white", textDecoration: "none" }}>
+                <p>Manage Requests</p>
+              </Link>
+            </>
           )}
 
           <button
@@ -100,6 +113,36 @@ function Layout() {
                 <PlotBooking />
               ) : user?.role === "admin" ? (
                 <Navigate to="/dashboard" replace />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
+          <Route
+            path="/create-request"
+            element={
+              user?.role === "user" ? (
+                <CreateRequest />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
+          <Route
+            path="/my-requests"
+            element={
+              user?.role === "user" ? (
+                <MyRequests />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
+          <Route
+            path="/admin/requests"
+            element={
+              user?.role === "admin" ? (
+                <AdminRequests />
               ) : (
                 <Navigate to="/login" replace />
               )
