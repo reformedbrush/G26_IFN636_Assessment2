@@ -5,6 +5,7 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const plotRoutes = require('./routes/plotRoutes');
 const authRoutes = require('./routes/authRoutes');
+const requestRoutes = require('./routes/requestRoutes');
 const eventRoutes = require('./routes/eventRoutes');
 
 dotenv.config();
@@ -19,6 +20,7 @@ app.use(cors());
 app.use(express.json());
 app.use('/api/plots', plotRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/requests', requestRoutes);
 app.use('/api/events', eventRoutes);
 
 //app.use('/api/tasks', require('./routes/taskRoutes'));
