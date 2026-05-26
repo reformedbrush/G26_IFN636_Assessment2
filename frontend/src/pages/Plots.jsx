@@ -1,5 +1,6 @@
 import axiosInstance from "../axiosConfig";
 import { useEffect, useState } from "react";
+import styles from "./Plots.module.css";
 
 function Plots() {
   const [plots, setPlots] = useState([]);
@@ -68,341 +69,175 @@ function Plots() {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h1 style={{ paddingBottom: "30px" }}>
-        <b>Plot Management</b>
-      </h1>
+    <div className={styles.page}>
+      <div className={styles.container}>
+        <h1 className={styles.title}>Plot Management</h1>
+        <p className={styles.subtitle}>
+          Create plots, assign users, and manage availability.
+        </p>
 
-      <div
-        style={{
-          marginBottom: "20px",
-          padding: "15px",
-          border: "1px solid #ddd",
-          borderRadius: "8px",
-          backgroundColor: "#f9fafb",
-          display: "flex",
-          alignItems: "center",
-          gap: "10px",
-        }}
-      >
-        <input
-          value={name}
-          placeholder="Plot name"
-          onChange={(e) => setName(e.target.value)}
-          style={{
-            padding: "8px",
-            border: "1px solid #ccc",
-            borderRadius: "5px",
-            outline: "none",
-          }}
-        />
-
-        <input
-          value={size}
-          placeholder="Size"
-          onChange={(e) => setSize(e.target.value)}
-          style={{
-            padding: "8px",
-            border: "1px solid #ccc",
-            borderRadius: "5px",
-            outline: "none",
-          }}
-        />
-
-        <input
-          value={plants}
-          placeholder="Plants"
-          onChange={(e) => setPlants(e.target.value)}
-          style={{
-            padding: "8px",
-            border: "1px solid #ccc",
-            borderRadius: "5px",
-            outline: "none",
-          }}
-        />
-
-        <button
-          onClick={addPlot}
-          style={{
-            padding: "8px 14px",
-            backgroundColor: "#16a34a",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-        >
-          + Add Plot
-        </button>
-      </div>
-      <div style={{ textAlign: "left" }}>
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            backgroundColor: "white",
-            borderRadius: "8px",
-            overflow: "hidden",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-          }}
-        >
-          <thead>
-            <tr>
-              <th
-                style={{
-                  backgroundColor: "#f3f4f6",
-                  padding: "12px",
-                  textAlign: "left",
-                  borderBottom: "1px solid #ddd",
-                }}
-              >
-                Name
-              </th>
-              <th
-                style={{
-                  backgroundColor: "#f3f4f6",
-                  padding: "12px",
-                  textAlign: "left",
-                  borderBottom: "1px solid #ddd",
-                }}
-              >
-                Size
-              </th>
-              <th
-                style={{
-                  backgroundColor: "#f3f4f6",
-                  padding: "12px",
-                  textAlign: "left",
-                  borderBottom: "1px solid #ddd",
-                }}
-              >
-                Plants
-              </th>
-              <th
-                style={{
-                  backgroundColor: "#f3f4f6",
-                  padding: "12px",
-                  textAlign: "left",
-                  borderBottom: "1px solid #ddd",
-                }}
-              >
-                Status
-              </th>
-              <th
-                style={{
-                  backgroundColor: "#f3f4f6",
-                  padding: "12px",
-                  textAlign: "left",
-                  borderBottom: "1px solid #ddd",
-                }}
-              >
-                Assign User
-              </th>
-              <th
-                style={{
-                  backgroundColor: "#f3f4f6",
-                  padding: "12px",
-                  textAlign: "left",
-                  borderBottom: "1px solid #ddd",
-                }}
-              >
-                Actions
-              </th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {plots.map((plot) => (
-              <tr key={plot._id}>
-                <td style={{ padding: "10px", borderBottom: "1px solid #eee" }}>
-                  {plot.name}
-                </td>
-                <td style={{ padding: "10px", borderBottom: "1px solid #eee" }}>
-                  {plot.size}
-                </td>
-                <td style={{ padding: "10px", borderBottom: "1px solid #eee" }}>
-                  {plot.plants}
-                </td>
-
-                <td style={{ padding: "10px", borderBottom: "1px solid #eee" }}>
-                  <select
-                    value={plot.status}
-                    onChange={(e) =>
-                      updatePlot(plot._id, { status: e.target.value })
-                    }
-                  >
-                    <option value="Available">Available</option>
-                    <option value="Occupied">Occupied</option>
-                  </select>
-                </td>
-
-                <td style={{ padding: "10px", borderBottom: "1px solid #eee" }}>
-                  <select
-                    value={plot.bookedBy?._id || ""}
-                    onChange={(e) =>
-                      updatePlot(plot._id, { bookedBy: e.target.value })
-                    }
-                  >
-                    <option value="">Select User</option>
-                    {users.map((user) => (
-                      <option key={user._id} value={user._id}>
-                        {user.name}
-                      </option>
-                    ))}
-                  </select>
-                </td>
-
-                <td style={{ padding: "10px", borderBottom: "1px solid #eee" }}>
-                  <button
-                    style={{
-                      backgroundColor: "#3b82f6",
-                      color: "white",
-                      border: "none",
-                      padding: "8px 14px",
-                      borderRadius: "5px",
-                      cursor: "pointer",
-                      marginRight: "5px",
-                    }}
-                    onClick={() => startEdit(plot)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    style={{
-                      backgroundColor: "#FF0000",
-                      color: "white",
-                      border: "none",
-                      padding: "8px 14px",
-                      borderRadius: "5px",
-                      cursor: "pointer",
-                    }}
-                    onClick={() => deletePlot(plot._id)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Edit Modal */}
-      {editingId && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(0,0,0,0.5)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 1000,
-          }}
-        >
-          <div
-            style={{
-              backgroundColor: "white",
-              padding: "30px",
-              borderRadius: "8px",
-              boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-              width: "100%",
-              maxWidth: "400px",
-            }}
-          >
-            <h2 style={{ marginBottom: "20px" }}>Edit Plot</h2>
-
-            <input
-              value={editData.name}
-              placeholder="Plot name"
-              onChange={(e) =>
-                setEditData({ ...editData, name: e.target.value })
-              }
-              style={{
-                width: "100%",
-                padding: "8px",
-                marginBottom: "15px",
-                border: "1px solid #ccc",
-                borderRadius: "5px",
-                outline: "none",
-                boxSizing: "border-box",
-              }}
-            />
-
-            <input
-              value={editData.size}
-              placeholder="Size"
-              onChange={(e) =>
-                setEditData({ ...editData, size: e.target.value })
-              }
-              style={{
-                width: "100%",
-                padding: "8px",
-                marginBottom: "15px",
-                border: "1px solid #ccc",
-                borderRadius: "5px",
-                outline: "none",
-                boxSizing: "border-box",
-              }}
-            />
-
-            <input
-              value={editData.plants}
-              placeholder="Plants"
-              onChange={(e) =>
-                setEditData({ ...editData, plants: e.target.value })
-              }
-              style={{
-                width: "100%",
-                padding: "8px",
-                marginBottom: "20px",
-                border: "1px solid #ccc",
-                borderRadius: "5px",
-                outline: "none",
-                boxSizing: "border-box",
-              }}
-            />
-
-            <div
-              style={{
-                display: "flex",
-                gap: "10px",
-                justifyContent: "flex-end",
-              }}
-            >
-              <button
-                onClick={cancelEdit}
-                style={{
-                  padding: "8px 14px",
-                  backgroundColor: "#6b7280",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                }}
-              >
-                Cancel
-              </button>
-              <button
-                onClick={saveEdit}
-                style={{
-                  padding: "8px 14px",
-                  backgroundColor: "#16a34a",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                }}
-              >
-                Save
+        <section className={styles.card}>
+          <div className={styles.cardHeader}>
+            <h2 className={styles.cardTitle}>Add plot</h2>
+          </div>
+          <div className={styles.cardBody}>
+            <div className={styles.formRow}>
+              <input
+                value={name}
+                placeholder="Plot name"
+                onChange={(e) => setName(e.target.value)}
+                className={styles.input}
+              />
+              <input
+                value={size}
+                placeholder="Size"
+                onChange={(e) => setSize(e.target.value)}
+                className={styles.input}
+              />
+              <input
+                value={plants}
+                placeholder="Plants"
+                onChange={(e) => setPlants(e.target.value)}
+                className={styles.input}
+              />
+              <button type="button" onClick={addPlot} className={styles.primaryButton}>
+                + Add Plot
               </button>
             </div>
           </div>
-        </div>
-      )}
+        </section>
+
+        <section className={styles.card}>
+          <div className={styles.cardHeader}>
+            <h2 className={styles.cardTitle}>Plots</h2>
+          </div>
+          <div className={styles.tableWrap}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Size</th>
+                  <th>Plants</th>
+                  <th>Status</th>
+                  <th>Assign User</th>
+                  <th className={styles.actionsCol}>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {plots.map((plot) => (
+                  <tr key={plot._id}>
+                    <td>{plot.name}</td>
+                    <td>{plot.size}</td>
+                    <td>{plot.plants}</td>
+                    <td>
+                      <select
+                        value={plot.status}
+                        onChange={(e) =>
+                          updatePlot(plot._id, { status: e.target.value })
+                        }
+                        className={styles.select}
+                      >
+                        <option value="Available">Available</option>
+                        <option value="Occupied">Occupied</option>
+                      </select>
+                    </td>
+                    <td>
+                      <select
+                        value={plot.bookedBy?._id || ""}
+                        onChange={(e) =>
+                          updatePlot(plot._id, { bookedBy: e.target.value })
+                        }
+                        className={styles.select}
+                      >
+                        <option value="">Select User</option>
+                        {users.map((user) => (
+                          <option key={user._id} value={user._id}>
+                            {user.name}
+                          </option>
+                        ))}
+                      </select>
+                    </td>
+                    <td className={styles.actionsCol}>
+                      <span className={styles.btnRow}>
+                        <button
+                          type="button"
+                          onClick={() => startEdit(plot)}
+                          className={`${styles.btn} ${styles.btnEdit}`}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => deletePlot(plot._id)}
+                          className={`${styles.btn} ${styles.btnDelete}`}
+                        >
+                          Delete
+                        </button>
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* Edit Modal */}
+        {editingId && (
+          <div className={styles.modalBackdrop}>
+            <div className={styles.modal}>
+              <h2 className={styles.modalTitle}>Edit Plot</h2>
+
+              <input
+                value={editData.name}
+                placeholder="Plot name"
+                onChange={(e) =>
+                  setEditData({ ...editData, name: e.target.value })
+                }
+                className={styles.input}
+                style={{ width: "100%", marginBottom: "10px" }}
+              />
+
+              <input
+                value={editData.size}
+                placeholder="Size"
+                onChange={(e) =>
+                  setEditData({ ...editData, size: e.target.value })
+                }
+                className={styles.input}
+                style={{ width: "100%", marginBottom: "10px" }}
+              />
+
+              <input
+                value={editData.plants}
+                placeholder="Plants"
+                onChange={(e) =>
+                  setEditData({ ...editData, plants: e.target.value })
+                }
+                className={styles.input}
+                style={{ width: "100%" }}
+              />
+
+              <div className={styles.modalActions}>
+                <button
+                  type="button"
+                  onClick={cancelEdit}
+                  className={styles.secondaryButton}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={saveEdit}
+                  className={styles.saveButton}
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

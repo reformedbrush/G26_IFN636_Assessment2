@@ -2,20 +2,9 @@ import { useEffect, useState, useMemo } from "react";
 import axiosInstance from "../axiosConfig";
 import { useAuth } from "../context/AuthContext";
 import RequestStatusBadge from "../components/RequestStatusBadge";
+import styles from "./AdminRequests.module.css";
 
 const STATUS_FILTERS = ["All", "Pending", "Approved", "Rejected", "Completed"];
-
-const thStyle = {
-  backgroundColor: "#f3f4f6",
-  padding: "12px",
-  textAlign: "left",
-  borderBottom: "1px solid #ddd",
-};
-
-const tdStyle = {
-  padding: "10px",
-  borderBottom: "1px solid #eee",
-};
 
 function AdminRequests() {
   const { user } = useAuth();
@@ -75,131 +64,119 @@ function AdminRequests() {
   if (loading) return <p>Loading requests…</p>;
 
   return (
-    <div style={{ padding: "20px", maxWidth: "1100px" }}>
-      <h1 style={{ paddingBottom: "8px" }}>
-        <b>Manage requests</b>
-      </h1>
-      <p style={{ color: "#4b5563", marginBottom: "20px" }}>
-        Review and update garden activity requests from all users.
-      </p>
+    <div className={styles.page}>
+      <div className={styles.container}>
+        <h1 className={styles.title}>Manage requests</h1>
+        <p className={styles.subtitle}>
+          Review and update garden activity requests from all users.
+        </p>
 
-      <div style={{ marginBottom: "20px" }}>
-        <label style={{ marginRight: "10px", fontWeight: 600 }}>Filter by status:</label>
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          style={{
-            padding: "8px",
-            borderRadius: "5px",
-            border: "1px solid #ccc",
-          }}
-        >
-          {STATUS_FILTERS.map((s) => (
-            <option key={s} value={s}>
-              {s}
-            </option>
-          ))}
-        </select>
+        <div className={styles.toolbar}>
+          <div className={styles.filterGroup}>
+            <span className={styles.label}>Filter by status</span>
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className={styles.select}
+            >
+              {STATUS_FILTERS.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        <section className={styles.card}>
+          <div className={styles.cardHeader}>
+            <h2 className={styles.cardTitle}>Requests</h2>
+          </div>
+          <div className={styles.cardBody}>
+            {requests.length === 0 ? (
+              <p style={{ padding: "12px 18px" }}>
+                No requests match this filter.
+              </p>
+            ) : (
+              <div className={styles.tableWrap}>
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th>User</th>
+                      <th>Plot</th>
+                      <th>Type</th>
+                      <th>Description</th>
+                      <th>Status</th>
+                      <th>Created</th>
+                      <th className={styles.actionsCol}>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {requests.map((req) => (
+                      <tr key={req._id}>
+                        <td>
+                          {req.user?.name || "—"}
+                          <br />
+                          <span className={styles.muted}>
+                            {req.user?.email}
+                          </span>
+                        </td>
+                        <td>{req.plot?.name || "—"}</td>
+                        <td>{req.requestType}</td>
+                        <td>{req.description}</td>
+                        <td>
+                          <RequestStatusBadge status={req.status} />
+                        </td>
+                        <td>
+                          {req.createdAt
+                            ? new Date(req.createdAt).toLocaleString()
+                            : "—"}
+                        </td>
+                        <td className={styles.actionsCol}>
+                          <div className={styles.actionRow}>
+                            {req.status === "Pending" && (
+                              <>
+                                <button
+                                  type="button"
+                                  disabled={busyId === req._id}
+                                  onClick={() => updateStatus(req._id, "approve")}
+                                  className={`${styles.button} ${styles.btnApprove}`}
+                                >
+                                  Approve
+                                </button>
+                                <button
+                                  type="button"
+                                  disabled={busyId === req._id}
+                                  onClick={() => updateStatus(req._id, "reject")}
+                                  className={`${styles.button} ${styles.btnReject}`}
+                                >
+                                  Reject
+                                </button>
+                              </>
+                            )}
+                            {req.status === "Approved" && (
+                              <button
+                                type="button"
+                                disabled={busyId === req._id}
+                                onClick={() => updateStatus(req._id, "complete")}
+                                className={`${styles.button} ${styles.btnComplete}`}
+                              >
+                                Complete
+                              </button>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </section>
       </div>
-
-      {requests.length === 0 ? (
-        <p>No requests match this filter.</p>
-      ) : (
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            backgroundColor: "white",
-            borderRadius: "8px",
-            overflow: "hidden",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-          }}
-        >
-          <thead>
-            <tr>
-              <th style={thStyle}>User</th>
-              <th style={thStyle}>Plot</th>
-              <th style={thStyle}>Type</th>
-              <th style={thStyle}>Description</th>
-              <th style={thStyle}>Status</th>
-              <th style={thStyle}>Created</th>
-              <th style={thStyle}>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {requests.map((req) => (
-              <tr key={req._id}>
-                <td style={tdStyle}>
-                  {req.user?.name || "—"}
-                  <br />
-                  <span style={{ fontSize: "12px", color: "#6b7280" }}>
-                    {req.user?.email}
-                  </span>
-                </td>
-                <td style={tdStyle}>{req.plot?.name || "—"}</td>
-                <td style={tdStyle}>{req.requestType}</td>
-                <td style={tdStyle}>{req.description}</td>
-                <td style={tdStyle}>
-                  <RequestStatusBadge status={req.status} />
-                </td>
-                <td style={tdStyle}>
-                  {req.createdAt
-                    ? new Date(req.createdAt).toLocaleString()
-                    : "—"}
-                </td>
-                <td style={tdStyle}>
-                  <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
-                    {req.status === "Pending" && (
-                      <>
-                        <button
-                          type="button"
-                          disabled={busyId === req._id}
-                          onClick={() => updateStatus(req._id, "approve")}
-                          style={actionBtn("#16a34a")}
-                        >
-                          Approve
-                        </button>
-                        <button
-                          type="button"
-                          disabled={busyId === req._id}
-                          onClick={() => updateStatus(req._id, "reject")}
-                          style={actionBtn("#dc2626")}
-                        >
-                          Reject
-                        </button>
-                      </>
-                    )}
-                    {req.status === "Approved" && (
-                      <button
-                        type="button"
-                        disabled={busyId === req._id}
-                        onClick={() => updateStatus(req._id, "complete")}
-                        style={actionBtn("#2563eb")}
-                      >
-                        Complete
-                      </button>
-                    )}
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
     </div>
   );
-}
-
-function actionBtn(bg) {
-  return {
-    padding: "6px 10px",
-    backgroundColor: bg,
-    color: "white",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-    fontSize: "13px",
-  };
 }
 
 export default AdminRequests;

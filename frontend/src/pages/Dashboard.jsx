@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "../axiosConfig";
+import styles from "./Dashboard.module.css";
 
 function Dashboard() {
   const [plots, setPlots] = useState([]);
@@ -33,96 +34,120 @@ function Dashboard() {
     }
   };
 
+  const totalUsers = users.length;
+  const totalPlots = plots.length;
+  const occupiedPlots = plots.filter((p) => p.status === "Occupied").length;
+  const availablePlots = plots.filter((p) => p.status === "Available").length;
+
   return (
-    <div>
-      <h1 style={{ fontSize: "28px", marginBottom: "20px" }}>Dashboard</h1>
+    <div className={styles.page}>
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <div>
+            <h1 className={styles.title}>Dashboard</h1>
+            <p className={styles.subtitle}>
+              Overview of users and plot occupancy.
+            </p>
+          </div>
+        </div>
 
-      {/* Plots Table */}
-      <h2>Plots</h2>
-      <table
-        style={{
-          width: "100%",
-          borderCollapse: "collapse",
-          marginBottom: "30px",
-          backgroundColor: "white",
-        }}
-      >
-        <thead>
-          <tr>
-            <th style={thStyle}>Name</th>
-            <th style={thStyle}>Size</th>
-            <th style={thStyle}>Status</th>
-            <th style={thStyle}>Booked By</th>
-          </tr>
-        </thead>
-        <tbody>
-          {plots.map((plot) => (
-            <tr key={plot._id}>
-              <td style={tdStyle}>{plot.name}</td>
-              <td style={tdStyle}>{plot.size}</td>
-              <td style={tdStyle}>{plot.status}</td>
-              <td style={tdStyle}>
-                {plot.bookedBy ? plot.bookedBy.name : "Not booked"}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+        <div className={styles.statsGrid}>
+          <StatCard label="Total Users" value={totalUsers} />
+          <StatCard label="Total Plots" value={totalPlots} />
+          <StatCard label="Occupied Plots" value={occupiedPlots} />
+          <StatCard label="Available Plots" value={availablePlots} />
+        </div>
 
-      {/* Users Table */}
-      <h2>Users</h2>
-      <table
-        style={{
-          width: "100%",
-          borderCollapse: "collapse",
-          backgroundColor: "white",
-        }}
-      >
-        <thead>
-          <tr>
-            <th style={thStyle}>Name</th>
-            <th style={thStyle}>Email</th>
-            <th style={thStyle}>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => (
-            <tr key={user._id}>
-              <td style={tdStyle}>{user.name}</td>
-              <td style={tdStyle}>{user.email}</td>
-              <td style={tdStyle}>
-                <button
-                  onClick={() => deleteUser(user._id)}
-                  style={{
-                    backgroundColor: "#FF0000",
-                    color: "white",
-                    border: "none",
-                    padding: "8px 14px",
-                    borderRadius: "5px",
-                    cursor: "pointer",
-                  }}
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+        <DashboardCard title="Plots">
+          <div className={styles.tableWrap}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Size</th>
+                  <th>Status</th>
+                  <th>Booked By</th>
+                </tr>
+              </thead>
+              <tbody>
+                {plots.map((plot) => (
+                  <tr key={plot._id}>
+                    <td>{plot.name}</td>
+                    <td>{plot.size}</td>
+                    <td>
+                      <span
+                        className={`${styles.statusPill} ${
+                          plot.status === "Occupied"
+                            ? styles.statusOccupied
+                            : plot.status === "Available"
+                            ? styles.statusAvailable
+                            : styles.statusOther
+                        }`}
+                      >
+                        {plot.status}
+                      </span>
+                    </td>
+                    <td>{plot.bookedBy ? plot.bookedBy.name : "Not booked"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </DashboardCard>
+
+        <DashboardCard title="Users">
+          <div className={styles.tableWrap}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th className={styles.colActions}>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map((user) => (
+                  <tr key={user._id}>
+                    <td>{user.name}</td>
+                    <td>{user.email}</td>
+                    <td className={styles.colActions}>
+                      <button
+                        type="button"
+                        onClick={() => deleteUser(user._id)}
+                        className={styles.dangerButton}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </DashboardCard>
+      </div>
     </div>
   );
 }
 
-const thStyle = {
-  borderBottom: "1px solid #ddd",
-  padding: "10px",
-  textAlign: "left",
-  backgroundColor: "#f3f4f6",
-};
+function DashboardCard({ title, children }) {
+  return (
+    <section className={styles.card}>
+      <div className={styles.cardHeader}>
+        <h2 className={styles.cardTitle}>{title}</h2>
+      </div>
+      <div className={styles.cardBody}>{children}</div>
+    </section>
+  );
+}
 
-const tdStyle = {
-  padding: "10px",
-  borderBottom: "1px solid #eee",
-};
+function StatCard({ label, value }) {
+  return (
+    <div className={styles.statCard}>
+      <div className={styles.statLabel}>{label}</div>
+      <div className={styles.statValue}>{value}</div>
+    </div>
+  );
+}
 
 export default Dashboard;

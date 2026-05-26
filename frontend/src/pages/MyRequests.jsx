@@ -3,18 +3,7 @@ import { Link } from "react-router-dom";
 import axiosInstance from "../axiosConfig";
 import { useAuth } from "../context/AuthContext";
 import RequestStatusBadge from "../components/RequestStatusBadge";
-
-const thStyle = {
-  backgroundColor: "#f3f4f6",
-  padding: "12px",
-  textAlign: "left",
-  borderBottom: "1px solid #ddd",
-};
-
-const tdStyle = {
-  padding: "10px",
-  borderBottom: "1px solid #eee",
-};
+import styles from "./MyRequests.module.css";
 
 function MyRequests() {
   const { user } = useAuth();
@@ -66,96 +55,76 @@ function MyRequests() {
   if (loading) return <p>Loading requests…</p>;
 
   return (
-    <div style={{ maxWidth: "960px" }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "24px",
-          flexWrap: "wrap",
-          gap: "12px",
-        }}
-      >
-        <div>
-          <h1 style={{ fontSize: "26px", marginBottom: "8px" }}>My requests</h1>
-          <p style={{ color: "#4b5563" }}>
-            Track activity requests for your booked plots.
-          </p>
+    <div className={styles.page}>
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <div>
+            <h1 className={styles.title}>My requests</h1>
+            <p className={styles.subtitle}>
+              Track activity requests for your booked plots.
+            </p>
+          </div>
+          <Link to="/create-request" className={styles.primaryLink}>
+            + New request
+          </Link>
         </div>
-        <Link
-          to="/create-request"
-          style={{
-            padding: "8px 16px",
-            backgroundColor: "#16a34a",
-            color: "white",
-            textDecoration: "none",
-            borderRadius: "5px",
-            fontWeight: 600,
-          }}
-        >
-          + New request
-        </Link>
-      </div>
 
-      {requests.length === 0 ? (
-        <p>No requests yet. Create one to get started.</p>
-      ) : (
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            backgroundColor: "white",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-          }}
-        >
-          <thead>
-            <tr>
-              <th style={thStyle}>Plot</th>
-              <th style={thStyle}>Type</th>
-              <th style={thStyle}>Description</th>
-              <th style={thStyle}>Status</th>
-              <th style={thStyle}>Created</th>
-              <th style={thStyle} />
-            </tr>
-          </thead>
-          <tbody>
-            {requests.map((req) => (
-              <tr key={req._id}>
-                <td style={tdStyle}>{req.plot?.name || "—"}</td>
-                <td style={tdStyle}>{req.requestType}</td>
-                <td style={tdStyle}>{req.description}</td>
-                <td style={tdStyle}>
-                  <RequestStatusBadge status={req.status} />
-                </td>
-                <td style={tdStyle}>
-                  {req.createdAt
-                    ? new Date(req.createdAt).toLocaleString()
-                    : "—"}
-                </td>
-                <td style={tdStyle}>
-                  {req.status === "Pending" && (
-                    <button
-                      type="button"
-                      onClick={() => handleDelete(req._id)}
-                      style={{
-                        padding: "6px 12px",
-                        backgroundColor: "#dc2626",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "5px",
-                        cursor: "pointer",
-                      }}
-                    >
-                      Delete
-                    </button>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+        <section className={styles.card}>
+          <div className={styles.cardHeader}>
+            <h2 className={styles.cardTitle}>Your requests</h2>
+          </div>
+          <div className={styles.cardBody}>
+            {requests.length === 0 ? (
+              <p className={styles.emptyState}>
+                No requests yet. Create one to get started.
+              </p>
+            ) : (
+              <div className={styles.tableWrap}>
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th>Plot</th>
+                      <th>Type</th>
+                      <th>Description</th>
+                      <th>Status</th>
+                      <th>Created</th>
+                      <th className={styles.actionsCol} />
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {requests.map((req) => (
+                      <tr key={req._id}>
+                        <td>{req.plot?.name || "—"}</td>
+                        <td>{req.requestType}</td>
+                        <td>{req.description}</td>
+                        <td>
+                          <RequestStatusBadge status={req.status} />
+                        </td>
+                        <td>
+                          {req.createdAt
+                            ? new Date(req.createdAt).toLocaleString()
+                            : "—"}
+                        </td>
+                        <td className={styles.actionsCol}>
+                          {req.status === "Pending" && (
+                            <button
+                              type="button"
+                              onClick={() => handleDelete(req._id)}
+                              className={styles.dangerButton}
+                            >
+                              Delete
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </section>
+      </div>
     </div>
   );
 }

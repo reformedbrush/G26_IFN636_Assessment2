@@ -1,18 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import axiosInstance from "../axiosConfig";
 import { useAuth } from "../context/AuthContext";
-
-const thStyle = {
-  backgroundColor: "#f3f4f6",
-  padding: "12px",
-  textAlign: "left",
-  borderBottom: "1px solid #ddd",
-};
-
-const tdStyle = {
-  padding: "10px",
-  borderBottom: "1px solid #eee",
-};
+import styles from "./PlotBooking.module.css";
 
 function PlotBooking() {
   const [plots, setPlots] = useState([]);
@@ -96,120 +85,102 @@ function PlotBooking() {
   }
 
   return (
-    <div style={{ maxWidth: "960px" }}>
-      <h1 style={{ fontSize: "26px", marginBottom: "8px" }}>Book a plot</h1>
-      <p style={{ color: "#4b5563", marginBottom: "24px" }}>
-        Choose an available plot below.
-      </p>
+    <div className={styles.page}>
+      <div className={styles.container}>
+        <h1 className={styles.title}>Book a plot</h1>
+        <p className={styles.subtitle}>Choose an available plot below.</p>
 
-      <h2 style={{ fontSize: "18px", marginBottom: "12px" }}>Available plots</h2>
-      {availablePlots.length === 0 ? (
-        <p style={{ marginBottom: "28px" }}>No plots available right now.</p>
-      ) : (
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            backgroundColor: "white",
-            marginBottom: "36px",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-          }}
-        >
-          <thead>
-            <tr>
-              <th style={thStyle}>Name</th>
-              <th style={thStyle}>Size</th>
-              <th style={thStyle}>Plants</th>
-              <th style={thStyle}>Location</th>
-              <th style={thStyle} />
-            </tr>
-          </thead>
-          <tbody>
-            {availablePlots.map((plot) => (
-              <tr key={plot._id}>
-                <td style={tdStyle}>{plot.name}</td>
-                <td style={tdStyle}>{plot.size}</td>
-                <td style={tdStyle}>{plot.plants || "—"}</td>
-                <td style={tdStyle}>{plot.location || "—"}</td>
-                <td style={tdStyle}>
-                  <button
-                    type="button"
-                    disabled={busyId === plot._id}
-                    onClick={() => bookPlot(plot._id)}
-                    style={{
-                      padding: "8px 14px",
-                      backgroundColor: "#16a34a",
-                      color: "white",
-                      border: "none",
-                      borderRadius: "5px",
-                      cursor: busyId === plot._id ? "wait" : "pointer",
-                      opacity: busyId === plot._id ? 0.7 : 1,
-                    }}
-                  >
-                    {busyId === plot._id ? "Booking…" : "Book"}
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+        <section className={styles.card}>
+          <div className={styles.cardHeader}>
+            <h2 className={styles.cardTitle}>Available plots</h2>
+          </div>
+          <div className={styles.cardBody}>
+            {availablePlots.length === 0 ? (
+              <p className={styles.emptyState}>No plots available right now.</p>
+            ) : (
+              <div className={styles.tableWrap}>
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Size</th>
+                      <th>Plants</th>
+                      <th>Location</th>
+                      <th className={styles.actionsCol} />
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {availablePlots.map((plot) => (
+                      <tr key={plot._id}>
+                        <td>{plot.name}</td>
+                        <td>{plot.size}</td>
+                        <td>{plot.plants || "—"}</td>
+                        <td>{plot.location || "—"}</td>
+                        <td className={styles.actionsCol}>
+                          <button
+                            type="button"
+                            disabled={busyId === plot._id}
+                            onClick={() => bookPlot(plot._id)}
+                            className={styles.primaryButton}
+                          >
+                            {busyId === plot._id ? "Booking…" : "Book"}
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </section>
 
-      <h2 style={{ fontSize: "18px", marginBottom: "12px", marginTop: "8px" }}>
-        Your bookings
-      </h2>
-      <p style={{ marginBottom: "12px", color: "#4b5563", fontSize: "14px" }}>
-        Release a plot here if you no longer need it. 
-      </p>
-      {myPlots.length === 0 ? (
-        <p style={{ marginBottom: "16px" }}>You have no bookings yet.</p>
-      ) : (
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            backgroundColor: "white",
-            marginBottom: "16px",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-          }}
-        >
-          <thead>
-            <tr>
-              <th style={thStyle}>Name</th>
-              <th style={thStyle}>Size</th>
-              <th style={thStyle}>Status</th>
-              <th style={thStyle} />
-            </tr>
-          </thead>
-          <tbody>
-            {myPlots.map((plot) => (
-              <tr key={plot._id}>
-                <td style={tdStyle}>{plot.name}</td>
-                <td style={tdStyle}>{plot.size}</td>
-                <td style={tdStyle}>{plot.status}</td>
-                <td style={tdStyle}>
-                  <button
-                    type="button"
-                    disabled={busyId === plot._id}
-                    onClick={() => releasePlot(plot._id)}
-                    style={{
-                      padding: "8px 14px",
-                      backgroundColor: "#dc2626",
-                      color: "white",
-                      border: "none",
-                      borderRadius: "5px",
-                      cursor: busyId === plot._id ? "wait" : "pointer",
-                      opacity: busyId === plot._id ? 0.7 : 1,
-                    }}
-                  >
-                    {busyId === plot._id ? "…" : "Cancel"}
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+        <section className={styles.card}>
+          <div className={styles.cardHeader}>
+            <h2 className={styles.cardTitle}>Your bookings</h2>
+            <p className={styles.cardHint}>
+              Release a plot here if you no longer need it.
+            </p>
+          </div>
+          <div className={styles.cardBody}>
+            {myPlots.length === 0 ? (
+              <p className={styles.emptyState}>You have no bookings yet.</p>
+            ) : (
+              <div className={styles.tableWrap}>
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Size</th>
+                      <th>Status</th>
+                      <th className={styles.actionsCol} />
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {myPlots.map((plot) => (
+                      <tr key={plot._id}>
+                        <td>{plot.name}</td>
+                        <td>{plot.size}</td>
+                        <td>{plot.status}</td>
+                        <td className={styles.actionsCol}>
+                          <button
+                            type="button"
+                            disabled={busyId === plot._id}
+                            onClick={() => releasePlot(plot._id)}
+                            className={styles.dangerButton}
+                          >
+                            {busyId === plot._id ? "…" : "Cancel"}
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </section>
+      </div>
     </div>
   );
 }

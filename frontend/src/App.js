@@ -21,52 +21,69 @@ function Layout() {
   const hideSidebar = location.pathname === "/login" || location.pathname === "/register";
 
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
-      
-      
+    <div style={{ minHeight: "100vh", backgroundColor: "#e5e7eb" }}>
       {!hideSidebar && (
-        <div style={{ width: "220px", background: "#1f2937", color: "white", padding: "20px", display: "flex", flexDirection: "column" }}>
-          <h2><b>Garden Manager</b> </h2>
+        <div
+          style={{
+            position: "fixed",
+            inset: 0,
+            width: "220px",
+            background: "#111827",
+            color: "white",
+            padding: "20px 18px",
+            display: "flex",
+            flexDirection: "column",
+            boxShadow: "4px 0 12px rgba(15,23,42,0.45)",
+            zIndex: 40,
+          }}
+        >
+          <div style={{ marginBottom: "24px" }}>
+            <h2 style={{ margin: 0, fontSize: "20px" }}>
+              <b>Garden Manager</b>
+            </h2>
+          </div>
 
-          <Link to="/dashboard" style={{ color: "white", textDecoration: "none" }}>
-            <p style={{ marginTop: "10px" }}>Dashboard</p>
-          </Link>
-          {user && (
-  <Link to="/profile" style={{ color: "white", textDecoration: "none" }}>
-    <p>Profile</p>
-  </Link>
-)}
-
-          {user && (
-            <Link to="/events" style={{ color: "white", textDecoration: "none" }}>
-              <p>Events</p>
+          <nav style={{ display: "flex", flexDirection: "column", gap: "6px", fontSize: "14px" }}>
+            <Link to="/dashboard" style={{ color: "white", textDecoration: "none" }}>
+              <p style={{ margin: 0, padding: "8px 10px", borderRadius: "6px" }}>Dashboard</p>
             </Link>
-          )}
+            {user && (
+              <Link to="/profile" style={{ color: "white", textDecoration: "none" }}>
+                <p style={{ margin: 0, padding: "8px 10px", borderRadius: "6px" }}>Profile</p>
+              </Link>
+            )}
 
-          {user?.role === "user" && (
-            <>
-              <Link to="/user-plots" style={{ color: "white", textDecoration: "none" }}>
-                <p>Book Plot</p>
+            {user && (
+              <Link to="/events" style={{ color: "white", textDecoration: "none" }}>
+                <p style={{ margin: 0, padding: "8px 10px", borderRadius: "6px" }}>Events</p>
               </Link>
-              <Link to="/my-requests" style={{ color: "white", textDecoration: "none" }}>
-                <p>My Requests</p>
-              </Link>
-            </>
-          )}
+            )}
 
-          {user?.role === "admin" && (
-            <>
-              <Link to="/plots" style={{ color: "white", textDecoration: "none" }}>
-                <p>Manage Plot</p>
-              </Link>
-              <Link to="/admin/requests" style={{ color: "white", textDecoration: "none" }}>
-                <p>Manage Requests</p>
-              </Link>
-              <Link to="/admin/events" style={{ color: "white", textDecoration: "none" }}>
-                <p>Manage Events</p>
-              </Link>
-            </>
-          )}
+            {user?.role === "user" && (
+              <>
+                <Link to="/user-plots" style={{ color: "white", textDecoration: "none" }}>
+                  <p style={{ margin: 0, padding: "8px 10px", borderRadius: "6px" }}>Book Plot</p>
+                </Link>
+                <Link to="/my-requests" style={{ color: "white", textDecoration: "none" }}>
+                  <p style={{ margin: 0, padding: "8px 10px", borderRadius: "6px" }}>My Requests</p>
+                </Link>
+              </>
+            )}
+
+            {user?.role === "admin" && (
+              <>
+                <Link to="/plots" style={{ color: "white", textDecoration: "none" }}>
+                  <p style={{ margin: 0, padding: "8px 10px", borderRadius: "6px" }}>Manage Plot</p>
+                </Link>
+                <Link to="/admin/requests" style={{ color: "white", textDecoration: "none" }}>
+                  <p style={{ margin: 0, padding: "8px 10px", borderRadius: "6px" }}>Manage Requests</p>
+                </Link>
+                <Link to="/admin/events" style={{ color: "white", textDecoration: "none" }}>
+                  <p style={{ margin: 0, padding: "8px 10px", borderRadius: "6px" }}>Manage Events</p>
+                </Link>
+              </>
+            )}
+          </nav>
 
           <button
             onClick={() => {
@@ -79,9 +96,10 @@ function Layout() {
               backgroundColor: "#ef4444",
               color: "white",
               border: "none",
-              borderRadius: "5px",
+              borderRadius: "6px",
               cursor: "pointer",
-              width: "100%"
+              width: "100%",
+              fontSize: "14px",
             }}
           >
             Logout
@@ -90,8 +108,16 @@ function Layout() {
       )}
 
       {/* Main Content */}
-      <div style={{ flex: 1, padding: "20px" }}>
-        <Routes>
+      <div
+        style={{
+          marginLeft: hideSidebar ? 0 : "220px",
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <main style={{ flex: 1, padding: "0" }}>
+          <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/" element={<Navigate to="/login" />} />
@@ -179,6 +205,7 @@ function Layout() {
             }
           />
         </Routes>
+        </main>
       </div>
 
     </div>
