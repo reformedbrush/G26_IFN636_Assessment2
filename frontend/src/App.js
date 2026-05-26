@@ -50,6 +50,28 @@ function Layout() {
             {user && (
               <Link to="/profile" style={{ color: "white", textDecoration: "none" }}>
                 <p style={{ margin: 0, padding: "8px 10px", borderRadius: "6px" }}>Profile</p>
+          <Link to="/dashboard" style={{ color: "white", textDecoration: "none" }}>
+            <p style={{ marginTop: "10px" }}>Dashboard</p>
+          </Link>
+          {user && (
+  <Link to="/profile" style={{ color: "white", textDecoration: "none" }}>
+    <p>Profile</p>
+  </Link>
+)}
+
+          {user && (
+            <Link to="/events" style={{ color: "white", textDecoration: "none" }}>
+              <p>Events</p>
+            </Link>
+          )}
+
+          {user?.role === "user" && (
+            <>
+              <Link to="/user-plots" style={{ color: "white", textDecoration: "none" }}>
+                <p>Book Plot</p>
+              </Link>
+              <Link to="/my-requests" style={{ color: "white", textDecoration: "none" }}>
+                <p>My Requests</p>
               </Link>
             )}
 
@@ -84,6 +106,11 @@ function Layout() {
               </>
             )}
           </nav>
+              <Link to="/admin/events" style={{ color: "white", textDecoration: "none" }}>
+                <p>Manage Events</p>
+              </Link>
+            </>
+          )}
 
           <button
             onClick={() => {
