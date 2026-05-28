@@ -2,34 +2,33 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main, recovery-final ]
+    branches:
+      - main
+      - devops-ci
+
+  pull_request:
+    branches:
+      - devops-ci
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: ./backend
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Backend
-      - name: Install backend dependencies
-        run: |
-          cd backend
-          npm install
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
-      - name: Run backend
-        run: |
-          cd backend
-          echo "Backend OK"
+      - name: Install dependencies
+        run: npm install
 
-      # Frontend
-      - name: Install frontend dependencies
-        run: |
-          cd frontend
-          npm install
-
-      - name: Build frontend
-        run: |
-          cd frontend
-          npm run build || echo "Build skipped"
+      - name: Run tests
+        run: npm test
