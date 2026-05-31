@@ -1,58 +1,183 @@
-# N12398063_IFN636_1.2
+# Community Garden Manager (IFN636 Assessment 2)
 
-# Community Garden Manager (IFN636 Assessment 1.2)
-
-This project is a full-stack web application developed for managing community garden plots. It allows users to register, log in, and book plots, while administrators can manage plots and users.
+A full-stack web application developed for IFN636 Software Life Cycle Management. The system enables community garden members to manage plots, submit garden activity requests, participate in community events, and interact through a role-based management platform.
 
 ---
+## Test Credentials
+
+For demonstration and assessment purposes, the following administrator account can be used:
+
+### Administrator Account
+
+```text
+Email: admin@gmail.com
+Password: Admin@123
+```
+
+This account provides access to administrative functionality including:
+
+* User Management
+* Plot Management
+* Garden Activity Request Management
+* Community Event Management
+* Dashboard Analytics
+
+Note: These credentials are intended for assessment and demonstration purposes only.
 
 ## Features
 
-- User Authentication (Register and Login)
-- Role-based Access Control (Admin and User)
-- Plot Management (CRUD operations)
-- Booking System
-- User and Admin Dashboards
+### User Management
+
+* User Registration and Login
+* JWT Authentication
+* Role-Based Access Control (Admin/User)
+
+### Plot Management
+
+* View Available Plots
+* Book Garden Plots
+* Cancel Plot Bookings
+* Admin Plot Management
+
+### Garden Activity Requests
+
+Users can submit requests related to garden maintenance and support.
+
+Request Types:
+
+* Watering Request
+* Compost Request
+* Tool Request
+* Maintenance Request
+* Harvest Assistance
+
+Request Status Workflow:
+
+* Pending
+* Approved
+* Rejected
+* Completed
+
+Admin Features:
+
+* View All Requests
+* Approve Requests
+* Reject Requests
+* Mark Requests as Completed
+
+### Community Events
+
+Users can participate in community garden activities.
+
+User Features:
+
+* View Upcoming Events
+* Register for Events
+* Cancel Event Registration
+
+Admin Features:
+
+* Create Events
+* Update Events
+* Delete Events
+* View Event Participants
+
+### Dashboard
+
+* Admin Dashboard
+* User Dashboard
+* Plot Occupancy Overview
+* User Management
 
 ---
 
-## Tech Stack
+## Technology Stack
 
-Frontend:
+### Frontend
 
-- React.js
-- Axios
+* React.js
+* Axios
+* React Router
 
-Backend:
+### Backend
 
-- Node.js
-- Express.js
+* Node.js
+* Express.js
 
-Database:
+### Database
 
-- MongoDB Atlas
+* MongoDB Atlas
+* Mongoose ODM
+
+### DevOps & Deployment
+
+* GitHub Actions
+* Vercel
+* AWS EC2
+* PM2
 
 ---
 
-## Project Setup Instructions
+## Software Engineering Concepts Implemented
 
-### 1. Clone Repository
+### Design Patterns
 
-```bash
-git clone https://github.com/reformedbrush/N12398063_IFN636_1.2.git
-cd N12398063_IFN636_1.2
+* MVC Architecture
+* Middleware Chain (Chain of Responsibility)
+* Module Pattern
+* Repository-style Data Access (Mongoose Models)
+* React Context Pattern
+
+### OOP Principles
+
+* Encapsulation
+* Abstraction
+* Modular Design
+* Separation of Concerns
+
+---
+
+## Project Structure
+
+```text
+backend/
+├── config/
+├── controllers/
+├── middleware/
+├── models/
+├── routes/
+├── server.js
+
+frontend/
+├── src/
+│   ├── components/
+│   ├── context/
+│   ├── pages/
+│   ├── axiosConfig.js
+│   └── App.js
 ```
 
 ---
 
-### 2. Backend Setup
+## Setup Instructions
+
+### Clone Repository
+
+```bash
+git clone <repository-url>
+cd <repository-name>
+```
+
+---
+
+### Backend Setup
 
 ```bash
 cd backend
 npm install
 ```
 
-Create a `.env` file in the backend folder:
+Create a `.env` file:
 
 ```env
 MONGO_URI=your_mongodb_connection_string
@@ -60,7 +185,7 @@ JWT_SECRET=your_secret_key
 PORT=5001
 ```
 
-Run the backend:
+Start Backend:
 
 ```bash
 npm start
@@ -68,7 +193,7 @@ npm start
 
 ---
 
-### 3. Frontend Setup
+### Frontend Setup
 
 ```bash
 cd frontend
@@ -78,50 +203,83 @@ npm start
 
 ---
 
-## Running the Application
+## Application URLs
 
 Frontend:
+
+```text
 http://localhost:3000
+```
 
 Backend:
+
+```text
 http://localhost:5001
+```
 
 ---
 
-## Public URL
+## Testing
 
-https://n12398063-ifn-636-1-2-4sr7n4myt-reformedbrushs-projects.vercel.app
+### API Testing
 
-Note: The frontend is deployed using Vercel with CI/CD integration via GitHub Actions. The backend is deployed on AWS EC2 and connected to MongoDB Atlas. Due to restricted inbound network policies, some backend endpoints may not be publicly accessible.
+* User Authentication Endpoints
+* Plot Management Endpoints
+* Garden Activity Request Endpoints
+* Community Event Endpoints
 
----
+### Functional Testing
 
-## Test Credentials
-
-Admin Account:
-Email: admin@gmail.com  
-Password: Admin@123
-
-User Account:
-Email: test2@gmail.com  
-Password: 1234
+* User Registration
+* Login
+* Plot Booking
+* Request Submission
+* Event Registration
+* Admin Management Functions
 
 ---
 
 ## CI/CD Pipeline
 
-The project uses GitHub Actions and Vercel for CI/CD:
+The project uses GitHub Actions and Vercel for continuous integration and deployment.
 
-- Code is pushed to GitHub
-- GitHub Actions runs automated build steps
-- Vercel automatically deploys the frontend
-- Backend is hosted on AWS EC2 and managed using PM2
+Workflow:
+
+1. Developer pushes code to GitHub.
+2. GitHub Actions executes automated build checks.
+3. Frontend is automatically deployed through Vercel.
+4. Backend is deployed on AWS EC2 using PM2.
+
+---
+
+## Deployment
+
+Frontend:
+
+* Vercel
+
+Backend:
+
+* AWS EC2
+* MongoDB Atlas
 
 ---
 
-## Author
+## Team Members
 
-Akshai Rekha Sangeeth  
-Student ID: N12398063
+* Akshai Rekha Sangeeth 
+* Athira Susan lalu
+* Leya Sebastian
+* Sivapriya Punnasseril
+
+* Team Members as applicable
 
 ---
+
+## Assessment
+
+Queensland University of Technology (QUT)
+
+IFN636 – Software Life Cycle Management
+
+Assessment 2 – Group 26 Project
